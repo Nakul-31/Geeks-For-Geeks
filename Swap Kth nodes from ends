@@ -1,0 +1,55 @@
+Python 3:
+
+class Node:
+    def __init__(self, x):
+        self.data = x
+        self.next = None
+
+class Solution:
+    def swapKth(self, head, k):
+        if not head:
+            return head
+
+        # Step 1: Find length of list
+        n = 0
+        curr = head
+        while curr:
+            n += 1
+            curr = curr.next
+
+        # Step 2: Invalid case
+        if k > n:
+            return head
+
+        # Step 3: Same node (middle in odd length list)
+        if 2 * k - 1 == n:
+            return head
+
+        # Step 4: Find kth node from start
+        x_prev, x = None, head
+        for _ in range(k - 1):
+            x_prev = x
+            x = x.next
+
+        # Step 5: Find kth node from end (n-k+1 from start)
+        y_prev, y = None, head
+        for _ in range(n - k):
+            y_prev = y
+            y = y.next
+
+        # Step 6: Swap previous pointers
+        if x_prev:
+            x_prev.next = y
+        if y_prev:
+            y_prev.next = x
+
+        # Step 7: Swap next pointers
+        x.next, y.next = y.next, x.next
+
+        # Step 8: Update head if needed
+        if k == 1:
+            head = y
+        if k == n:
+            head = x
+
+        return head
