@@ -1,0 +1,49 @@
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+
+class Solution:
+    def reverseKGroup(self, head, k):
+        if not head or k == 1:
+            return head
+
+        # Function to count nodes
+        def count_nodes(node):
+            cnt = 0
+            while node:
+                cnt += 1
+                node = node.next
+            return cnt
+
+        # Function to reverse k nodes
+        def reverse_k_nodes(start, k):
+            prev = None
+            curr = start
+            nxt = None
+            count = 0
+            while curr and count < k:
+                nxt = curr.next
+                curr.next = prev
+                prev = curr
+                curr = nxt
+                count += 1
+            return prev, start, curr  # (new_head, new_tail, next_start)
+
+        total_nodes = count_nodes(head)
+        dummy = Node(0)
+        dummy.next = head
+        prev_group_end = dummy
+        curr = head
+
+        while curr:
+            # If remaining nodes are less than k, still reverse
+            group_head, group_tail, next_group_start = reverse_k_nodes(curr, k)
+            prev_group_end.next = group_head
+            group_tail.next = next_group_start
+            prev_group_end = group_tail
+            curr = next_group_start
+            total_nodes -= k
+
+        return dummy.next
