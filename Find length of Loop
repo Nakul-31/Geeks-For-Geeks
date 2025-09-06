@@ -1,0 +1,26 @@
+class Solution:
+    def lengthOfLoop(self, head):
+        if not head:
+            return 0
+        
+        slow = head
+        fast = head
+        
+        # Step 1: Detect loop using Floyd’s cycle detection
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:  # Loop detected
+                return self.countLoopLength(slow)
+        
+        # No loop
+        return 0
+    
+    def countLoopLength(self, node):
+        """Count length of loop starting from meeting node."""
+        count = 1
+        temp = node.next
+        while temp != node:
+            count += 1
+            temp = temp.next
+        return count
