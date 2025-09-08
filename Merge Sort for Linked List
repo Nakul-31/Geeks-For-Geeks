@@ -1,0 +1,44 @@
+class Solution:
+    # Function to merge two sorted linked lists
+    def merge(self, left, right):
+        if not left:
+            return right
+        if not right:
+            return left
+        
+        if left.data <= right.data:
+            result = left
+            result.next = self.merge(left.next, right)
+        else:
+            result = right
+            result.next = self.merge(left, right.next)
+        return result
+
+    # Function to find the middle of the linked list
+    def getMiddle(self, head):
+        if not head:
+            return head
+        slow = head
+        fast = head.next
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+
+    # Main function to sort the linked list using Merge Sort
+    def mergeSort(self, head):
+        if not head or not head.next:
+            return head
+        
+        # Find the middle
+        middle = self.getMiddle(head)
+        nextToMiddle = middle.next
+        middle.next = None
+        
+        # Recursively sort left and right halves
+        left = self.mergeSort(head)
+        right = self.mergeSort(nextToMiddle)
+        
+        # Merge the sorted halves
+        sortedList = self.merge(left, right)
+        return sortedList
