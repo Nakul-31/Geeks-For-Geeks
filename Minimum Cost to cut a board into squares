@@ -1,0 +1,33 @@
+class Solution:
+    def minCost(self, n, m, x, y):
+        # Sort cuts in descending order
+        x.sort(reverse=True)
+        y.sort(reverse=True)
+        
+        i = j = 0
+        horizontal_segments = 1
+        vertical_segments = 1
+        total_cost = 0
+        
+        # Process cuts greedily
+        while i < len(x) and j < len(y):
+            if x[i] > y[j]:
+                total_cost += x[i] * horizontal_segments
+                vertical_segments += 1
+                i += 1
+            else:
+                total_cost += y[j] * vertical_segments
+                horizontal_segments += 1
+                j += 1
+        
+        # Process remaining vertical cuts
+        while i < len(x):
+            total_cost += x[i] * horizontal_segments
+            i += 1
+        
+        # Process remaining horizontal cuts
+        while j < len(y):
+            total_cost += y[j] * vertical_segments
+            j += 1
+        
+        return total_cost
