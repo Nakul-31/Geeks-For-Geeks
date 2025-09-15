@@ -1,0 +1,19 @@
+class Solution:
+    def stringStack(self, pat, tar):
+        i = len(pat) - 1
+        j = len(tar) - 1
+        skip = 0
+
+        while i >= 0:
+            if skip > 0:
+                skip -= 1
+                i -= 1
+            elif j >= 0 and pat[i] == tar[j]:
+                j -= 1
+                i -= 1
+            else:
+                # this pat[i] must have been removed by a delete in the forward pass
+                skip += 1
+                i -= 1
+
+        return j < 0
