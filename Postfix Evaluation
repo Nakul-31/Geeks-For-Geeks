@@ -1,0 +1,24 @@
+class Solution:
+    def evaluatePostfix(self, arr):
+        stack = []
+        ops = {"+", "-", "*", "/", "^"}
+
+        for token in arr:
+            if token not in ops:
+                stack.append(int(token))
+            else:
+                b = stack.pop()
+                a = stack.pop()
+                if token == "+":
+                    stack.append(a + b)
+                elif token == "-":
+                    stack.append(a - b)
+                elif token == "*":
+                    stack.append(a * b)
+                elif token == "/":
+                    # floor division is required (floor(a / b))
+                    stack.append(a // b)
+                else:  # "^"
+                    stack.append(pow(a, b))
+
+        return stack[-1]
