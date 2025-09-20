@@ -1,0 +1,60 @@
+class Solution:
+    def longestSubarray(self, arr):
+        n = len(arr)
+        # Keep only values <= n (others can never be in a valid subarray of length <= n)
+        pairs = sorted((v, i) for i, v in enumerate(arr) if v <= n)
+
+        parent = [-1] * n   # parent[i] == i when active; otherwise -1
+        size = [0] * n
+        active = [False] * n
+
+        def find(x):
+            # path-compression iterative
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+
+        def union(a, b):
+            ra = find(a)
+            rb = find(b)
+            if ra == rb:
+                return
+            # union by size
+            if size[ra] < size[rb]:
+                ra, rb = rb, ra
+            parent[rb] = ra
+            size[ra] += size[rb]
+            return size[ra]
+
+        ans = 0
+        ptr = 0
+        max_comp = 0
+
+        # t from 1..n (possible subarray lengths)
+        for t in range(1, n + 1):
+            # activate all indices with value <= t
+            while ptr < len(pairs) and pairs[ptr][0] <= t:
+                _, idx = pairs[ptr]
+                ptr += 1
+                active[idx] = True
+                parent[idx] = idx
+                size[idx] = 1
+                if size[idx] > max_comp:
+                    max_comp = size[idx]
+                # union with left neighbor if active
+                if idx - 1 >= 0 and active[idx - 1]:
+                    new_size = union(idx, idx - 1)
+                    if new_size is not None and new_size > max_comp:
+                        max_comp = new_size
+                # union with right neighbor if active
+                if idx + 1 < n and active[idx + 1]:
+                    new_size = union(idx, idx + 1)
+                    if new_size is not None and new_size > max_comp:
+                        max_comp = new_size
+
+            # If any connected component of active cells has length >= t, t is feasible
+            if max_comp >= t:
+                ans = t
+
+        return ans
