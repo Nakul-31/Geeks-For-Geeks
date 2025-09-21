@@ -1,0 +1,38 @@
+class Solution:
+    def maxArea(self, mat):
+        if not mat or not mat[0]:
+            return 0
+        
+        n, m = len(mat), len(mat[0])
+        
+        # heights for histogram representation
+        heights = [0] * m
+        max_area = 0
+        
+        for i in range(n):
+            for j in range(m):
+                if mat[i][j] == 0:
+                    heights[j] = 0
+                else:
+                    heights[j] += 1
+            
+            # update max_area using histogram method
+            max_area = max(max_area, self.largestRectangleArea(heights))
+        
+        return max_area
+    
+    def largestRectangleArea(self, heights):
+        stack = []  # (index, height)
+        max_area = 0
+        heights.append(0)  # sentinel to flush stack
+        
+        for i, h in enumerate(heights):
+            start = i
+            while stack and stack[-1][1] > h:
+                index, height = stack.pop()
+                max_area = max(max_area, height * (i - index))
+                start = index
+            stack.append((start, h))
+        
+        heights.pop()  # remove sentinel
+        return max_area
