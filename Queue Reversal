@@ -1,0 +1,18 @@
+from collections import deque
+
+class Solution:
+    def reverseQueue(self, q):
+        # Base case
+        if not q:  # queue is empty
+            return q
+
+        # Pop leftmost element
+        item = q.popleft()
+
+        # Recurse on remaining queue
+        self.reverseQueue(q)
+
+        # Append item at rear
+        q.append(item)
+
+        return q
