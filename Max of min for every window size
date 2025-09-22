@@ -1,0 +1,31 @@
+class Solution:
+    def maxOfMins(self, arr):
+        n = len(arr)
+        
+        # Step 1: Find next smaller element indexes
+        next_smaller = [n] * n
+        stack = []
+        for i in range(n):
+            while stack and arr[stack[-1]] > arr[i]:
+                next_smaller[stack.pop()] = i
+            stack.append(i)
+
+        # Step 2: Find previous smaller element indexes
+        prev_smaller = [-1] * n
+        stack = []
+        for i in range(n - 1, -1, -1):
+            while stack and arr[stack[-1]] > arr[i]:
+                prev_smaller[stack.pop()] = i
+            stack.append(i)
+
+        # Step 3: Find window length for each element
+        ans = [0] * (n + 1)
+        for i in range(n):
+            length = next_smaller[i] - prev_smaller[i] - 1
+            ans[length] = max(ans[length], arr[i])
+
+        # Step 4: Fill remaining entries (propagate max from right to left)
+        for i in range(n - 1, 0, -1):
+            ans[i] = max(ans[i], ans[i + 1])
+
+        return ans[1:]
