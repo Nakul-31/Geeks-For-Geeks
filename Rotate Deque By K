@@ -1,0 +1,13 @@
+from collections import deque
+
+class Solution:    
+    def rotateDeque(self, dq, type, k):
+        n = len(dq)
+        k = k % n
+        
+        if type == 1:  
+            dq.rotate(k)
+        elif type == 2:
+            dq.rotate(-k)
+
+        return list(dq) 
