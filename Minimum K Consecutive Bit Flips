@@ -1,0 +1,18 @@
+class Solution:
+    def kBitFlips(self, arr, k):
+        n = len(arr)
+        flips = 0
+        flip = 0
+        isFlipped = [0] * (n + 1)  # Marks when a flip expires
+
+        for i in range(n):
+            flip ^= isFlipped[i]  # Remove expired flips
+            # If current bit is 0 after considering flips
+            if (arr[i] ^ flip) == 0:
+                if i + k > n:
+                    return -1
+                flips += 1
+                flip ^= 1  # Start a new flip
+                isFlipped[i + k] ^= 1  # Mark expiry of this flip
+
+        return flips
