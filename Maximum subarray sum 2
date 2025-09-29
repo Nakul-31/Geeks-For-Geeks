@@ -1,0 +1,29 @@
+from collections import deque
+
+class Solution:
+    def maxSubarrSum(self, arr, a, b):
+        n = len(arr)
+
+        # prefix sum
+        prefix = [0] * (n + 1)
+        for i in range(n):
+            prefix[i+1] = prefix[i] + arr[i]
+
+        result = float('-inf')
+        dq = deque()  # will store indices of prefix[] in increasing order of values
+
+        for r in range(a, n+1):
+            # Add candidate index (r - a)
+            idx = r - a
+            while dq and prefix[dq[-1]] >= prefix[idx]:
+                dq.pop()
+            dq.append(idx)
+
+            # Remove outdated indices (out of window r - b)
+            while dq and dq[0] < r - b:
+                dq.popleft()
+
+            # Best subarray ending at r
+            result = max(result, prefix[r] - prefix[dq[0]])
+
+        return result
