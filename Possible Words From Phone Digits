@@ -1,0 +1,26 @@
+class Solution:
+    def possibleWords(self, arr):
+        # Phone keypad mapping
+        keypad = {
+            2: "abc", 3: "def", 4: "ghi", 5: "jkl",
+            6: "mno", 7: "pqrs", 8: "tuv", 9: "wxyz"
+        }
+        
+        # Filter out digits 0 and 1
+        arr = [d for d in arr if d in keypad]
+        if not arr:
+            return []
+        
+        # Backtracking function
+        def backtrack(index, path, result):
+            if index == len(arr):
+                result.append("".join(path))
+                return
+            for char in keypad[arr[index]]:
+                path.append(char)
+                backtrack(index + 1, path, result)
+                path.pop()
+        
+        result = []
+        backtrack(0, [], result)
+        return result
