@@ -1,0 +1,32 @@
+class Solution:
+    def findExpr(self, s, target):
+        result = []
+        
+        def backtrack(index, expr, value, prev):
+            # If reached end of string
+            if index == len(s):
+                if value == target:
+                    result.append(expr)
+                return
+            
+            for i in range(index, len(s)):
+                # Skip numbers with leading zeros
+                if i > index and s[index] == '0':
+                    break
+                
+                num_str = s[index:i + 1]
+                num = int(num_str)
+                
+                if index == 0:
+                    # First number — start expression
+                    backtrack(i + 1, num_str, num, num)
+                else:
+                    # Try '+'
+                    backtrack(i + 1, expr + '+' + num_str, value + num, num)
+                    # Try '-'
+                    backtrack(i + 1, expr + '-' + num_str, value - num, -num)
+                    # Try '*'
+                    backtrack(i + 1, expr + '*' + num_str, value - prev + prev * num, prev * num)
+        
+        backtrack(0, "", 0, 0)
+        return sorted(result)
