@@ -1,0 +1,26 @@
+from collections import deque
+
+class Solution:
+    def bottomView(self, root):
+        if not root:
+            return []
+
+        # dictionary: horizontal_distance -> node.data
+        hd_map = {}
+        # queue stores pairs of (node, horizontal_distance)
+        q = deque([(root, 0)])
+
+        while q:
+            node, hd = q.popleft()
+            # overwrite value for this hd → bottom-most node wins
+            hd_map[hd] = node.data
+
+            # enqueue children with updated horizontal distance
+            if node.left:
+                q.append((node.left, hd - 1))
+            if node.right:
+                q.append((node.right, hd + 1))
+
+        # sort by horizontal distance (left to right)
+        sorted_hd = sorted(hd_map.keys())
+        return [hd_map[hd] for hd in sorted_hd]
