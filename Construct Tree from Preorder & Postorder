@@ -1,0 +1,33 @@
+# Definition for the binary tree node
+class Node:
+    def __init__(self, val):
+        self.data = val
+        self.left = None
+        self.right = None
+
+
+class Solution:
+    def constructTree(self, pre, post):
+        index_map = {val: i for i, val in enumerate(post)}
+        preIndex = [0]
+        size = len(pre)
+
+        def build(postStart, postEnd):
+            if preIndex[0] >= size or postStart > postEnd:
+                return None
+
+            root = Node(pre[preIndex[0]])
+            preIndex[0] += 1
+
+            # If only one node, return it
+            if postStart == postEnd or preIndex[0] >= size:
+                return root
+
+            postIndex = index_map[pre[preIndex[0]]]
+
+            root.left = build(postStart, postIndex)
+            root.right = build(postIndex + 1, postEnd - 1)
+
+            return root
+
+        return build(0, size - 1)
