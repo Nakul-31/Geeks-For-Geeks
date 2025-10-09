@@ -1,0 +1,13 @@
+class Solution:
+    def postOrder(self, root):
+        res = []
+        
+        def dfs(node):
+            if not node:
+                return
+            dfs(node.left)   # Visit left subtree
+            dfs(node.right)  # Visit right subtree
+            res.append(node.data)  # Visit root
+            
+        dfs(root)
+        return res
