@@ -1,0 +1,20 @@
+class Solution:
+    def getMaxSum(self, root):
+        # Helper function returns tuple (include, exclude)
+        def dfs(node):
+            if not node:
+                return (0, 0)
+            
+            left_in, left_ex = dfs(node.left)
+            right_in, right_ex = dfs(node.right)
+            
+            # If we include this node, we cannot include its children
+            include = node.data + left_ex + right_ex
+            
+            # If we exclude this node, we can take max of include/exclude from children
+            exclude = max(left_in, left_ex) + max(right_in, right_ex)
+            
+            return (include, exclude)
+        
+        inc, exc = dfs(root)
+        return max(inc, exc)
